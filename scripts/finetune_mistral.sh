@@ -14,19 +14,18 @@ MODEL_VERSION="vicuna-v1-3-7b"
 # MODEL_VERSION="llama-2-7b-chat"
 ################## LLaMA-2 ##################
 
-deepspeed --include localhost:0,1,2,3 llava/train/train_mem.py \
+deepspeed llava/train/train_mem.py \
     --deepspeed ./scripts/zero2.json \
-    --lora_enable True \
-    --model_name_or_path liuhaotian/llava-v1.5-7b  \
+    --model_name_or_path mistralai/Mistral-7B-v0.1 \
     --version $PROMPT_VERSION \
     --data_path ./playground/data/llava_instruct_80k.json \
-    --image_folder /data/multimodal/coco/images/train2017 \
+    --image_folder /path/to/coco/train2017 \
     --vision_tower openai/clip-vit-large-patch14 \
     --mm_vision_select_layer -2 \
     --mm_use_im_start_end False \
     --mm_use_im_patch_token False \
     --bf16 True \
-    --output_dir ./checkpoints/llava-$MODEL_VERSION-finetune_lora \
+    --output_dir ./checkpoints/llava-$MODEL_VERSION-finetune \
     --num_train_epochs 1 \
     --per_device_train_batch_size 16 \
     --per_device_eval_batch_size 4 \
@@ -43,6 +42,6 @@ deepspeed --include localhost:0,1,2,3 llava/train/train_mem.py \
     --tf32 True \
     --model_max_length 2048 \
     --gradient_checkpointing True \
-    --lazy_preprocess True \
     --dataloader_num_workers 4 \
+    --lazy_preprocess True \
     --report_to wandb

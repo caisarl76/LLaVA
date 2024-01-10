@@ -922,9 +922,19 @@ def train():
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
+    
+    run_name = '-'.join([
+        model_args.model_name_or_path.split('/')[-1], # model part
+        data_args.data_path.split('/')[-1].rstrip('.json'), # data part
+        'LoRA' if training_args.lora_enable else 'FT',
+        'ep'+str(training_args.num_train_epochs),
+        'lr'+str(training_args.learning_rate)
+        ])
+    
     trainer = LLaVATrainer(model=model,
                     tokenizer=tokenizer,
                     args=training_args,
+                    run_name=run_name,
                     **data_module)
 
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):

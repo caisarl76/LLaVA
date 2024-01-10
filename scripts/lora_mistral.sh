@@ -17,7 +17,7 @@ MODEL_VERSION="vicuna-v1-3-7b"
 deepspeed --include localhost:0,1,2,3 llava/train/train_mem.py \
     --deepspeed ./scripts/zero2.json \
     --lora_enable True \
-    --model_name_or_path liuhaotian/llava-v1.5-7b  \
+    --model_name_or_path mistralai/Mistral-7B-v0.1  \
     --version $PROMPT_VERSION \
     --data_path ./playground/data/llava_instruct_80k.json \
     --image_folder /data/multimodal/coco/images/train2017 \
@@ -28,7 +28,7 @@ deepspeed --include localhost:0,1,2,3 llava/train/train_mem.py \
     --bf16 True \
     --output_dir ./checkpoints/llava-$MODEL_VERSION-finetune_lora \
     --num_train_epochs 1 \
-    --per_device_train_batch_size 16 \
+    --per_device_train_batch_size 32 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 1 \
     --evaluation_strategy "no" \
